@@ -1,0 +1,10 @@
+{
+	"server": {
+		"baseDir": "build",
+		"routes": {
+ 		   	"/node_modules": "node_modules"
+		}
+  	},
+	"notify": false,
+	"port": 8080
+}
