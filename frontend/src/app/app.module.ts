@@ -1,11 +1,15 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { NgModule } 		from '@angular/core'
+import { BrowserModule }	from '@angular/platform-browser'
+import { FormsModule }		from '@angular/forms'
+import { HttpModule }		from '@angular/http'
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule }	from './app-routing.module'
 
-import { AppComponent } from './app.component';
+import { MainComponent}		from './Main/main.component'
+import { LoginComponent }	from './Login/login.component'
+import { TasksComponent }	from './Tasks/tasks.component'
+
+import { TasksService }		from './Tasks/tasks.service'
 
 @NgModule({
 	imports: [
@@ -15,8 +19,13 @@ import { AppComponent } from './app.component';
 		AppRoutingModule,
 	],
 	declarations: [
-		AppComponent
+		MainComponent,
+		LoginComponent,
+		TasksComponent
 	],
-	bootstrap: [ AppComponent ]
+	bootstrap: [ MainComponent ],
+	providers: [
+		TasksService
+	]
 })
 export class AppModule { }
