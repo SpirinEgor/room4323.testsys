@@ -9,9 +9,11 @@ import { MainComponent}		from './Main/main.component'
 import { LoginComponent }	from './Login/login.component'
 import { TasksComponent }	from './Tasks/tasks.component'
 import { ProblemComponent }	from './Problem/problem.component'
+import { SubmitComponent }	from './Submit/submit.component'
 
 import { TasksService }		from './Tasks/tasks.service'
 import { ProblemService }	from './Problem/problem.service'
+import { SubmitService }	from './Submit/submit.service'
 
 @NgModule({
 	imports: [
@@ -24,12 +26,14 @@ import { ProblemService }	from './Problem/problem.service'
 		MainComponent,
 		LoginComponent,
 		TasksComponent,
-		ProblemComponent
+		ProblemComponent,
+		SubmitComponent
 	],
 	bootstrap: [ MainComponent ],
 	providers: [
 		TasksService,
-		ProblemService
+		ProblemService,
+		SubmitService
 	]
 })
 export class AppModule { }

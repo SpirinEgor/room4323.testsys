@@ -1,0 +1,7 @@
+<h1>{{problemName}}</h1>
+<textarea #input (keyup)="update(input.value)"
+            rows="20" type="text" placeholder="Input your solution here..."></textarea><br>
+<button (click)="submitSolution()">Submit</button>
+<div *ngFor="let submit of submissions">
+    <p>{{submit.id}}. {{submit.status}}: {{submit.test}} ({{submit.comment}})</p>
+</div>

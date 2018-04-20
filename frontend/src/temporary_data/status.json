@@ -1,0 +1,14 @@
+{
+    "status": "OK",
+    "result": {
+        "problem": {
+            "id": 1,
+            "name": "A + B"
+        },
+        "submissions": [
+            { "id": 0, "status": "wrong answer", "test": 5, "comment": "" }, 
+            { "id": 1, "status": "wrong answer", "test": 7, "comment": "" }, 
+            { "id": 2, "status": "ok", "test": -1, "comment": "" }
+        ]
+    }
+}
