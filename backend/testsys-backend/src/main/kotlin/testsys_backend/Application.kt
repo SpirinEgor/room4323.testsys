@@ -23,6 +23,8 @@ fun Application.main() {
         }
     }
 
+    val database = Database("/home/voudy/Documents/room4323.testsys/database/testsys.db")
+
     routing {
         route("/api") {
             get("tasks") {
@@ -30,7 +32,8 @@ fun Application.main() {
                 val gson = GsonBuilder().create()
                 val tasks: Tasks = gson.fromJson(fileContent, Tasks::class.java)
 
-                call.respond(tasks)
+//                call.respond(tasks)
+                call.respond(database.connect())
             }
             get("tasks/{id}") {
                 val fileContent = this.javaClass.getResource("/tasks.json").readText()

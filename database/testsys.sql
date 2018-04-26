@@ -25,12 +25,10 @@ CREATE TABLE Users (
     fullname text not null
 );
 
-CREATE TYPE contest_role AS ENUM ('participant', 'jury');
-
 CREATE TABLE users_contests (
     contest_id integer references Contests(id),
     user_id integer references Users(id),
-    role contest_role default 'participant'
+    role varchar(20) default 'participant'
 );
 
 CREATE TABLE problems_contests (
@@ -38,13 +36,11 @@ CREATE TABLE problems_contests (
     user_id integer references Users(id)
 );
 
-CREATE TYPE submit_status AS ENUM('pending', 'running', 'ready');
-
 CREATE TABLE Submits (
     id serial primary key,
     pr_id integer references Problems(id),
     user_id integer references Users(id),
-    status submit_status default 'pending',
-    time timestamptz default now(),
-    verdict json
+    status varchar(20) default 'pending',
+    time timestamp default CURRENT_TIMESTAMP,
+    verdict text
 );
