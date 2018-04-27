@@ -1,5 +1,6 @@
 import { Injectable }               from '@angular/core'
-import { Http }                     from '@angular/http'
+import { Http, RequestOptions,
+	Headers, RequestMethod }		from '@angular/http'
 
 import { successful, serverError }  from '../common/response'
 
@@ -15,7 +16,7 @@ export class TasksService {
 	}
 
 	getAllTasks() {
-		return this.$http.get('http://localhost:8080/temporary_data/tasks.json')
+		return this.$http.get('http://localhost:8000/api/tasks')
 						.toPromise()
 						.then(
 							response => {

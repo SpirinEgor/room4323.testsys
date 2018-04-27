@@ -15,7 +15,7 @@ export class ProblemService {
 	}
 
 	getProblem(id: string) {
-		return this.$http.get('http://localhost:8080/temporary_data/problem.json')
+		return this.$http.get('http://localhost:8000/api/tasks/' + id)
 						.toPromise()
 						.then(
 							response => {

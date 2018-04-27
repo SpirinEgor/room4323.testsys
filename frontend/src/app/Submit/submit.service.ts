@@ -15,7 +15,7 @@ export class SubmitService {
 	}
 
 	getStatus(id: string) {
-		return this.$http.get('http://localhost:8080/temporary_data/status.json')
+		return this.$http.get('http://localhost:8000/api/tasks/' + id + '/status')
 						.toPromise()
 						.then(
 							response => {

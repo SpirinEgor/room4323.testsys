@@ -3,8 +3,11 @@ package testsysBackend.api
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import io.ktor.application.call
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.response.header
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import testsysBackend.database.Database
@@ -19,10 +22,12 @@ fun Routing.route(database: Database) {
             curTaskJson.addProperty("name", task.name)
             tasksJson.add(curTaskJson)
         }
+        val allTasksJson = JsonObject()
+        allTasksJson.add("tasks", tasksJson)
         val response = JsonObject()
         response.addProperty("status", "OK")
-        response.add("result", tasksJson)
-        call.respond(response)
+        response.add("result", allTasksJson)
+        call.respondText(response.toString(), ContentType.Application.Json)
     }
     get("/api/tasks/{id}") {
         val prId = call.parameters["id"]?.toInt()
@@ -40,7 +45,7 @@ fun Routing.route(database: Database) {
                 val response = JsonObject()
                 response.addProperty("status", "OK")
                 response.add("result", taskJson)
-                call.respond(response)
+                call.respondText(response.toString(), ContentType.Application.Json)
             }
         }
     }
@@ -64,8 +69,10 @@ fun Routing.route(database: Database) {
                     val curSubmitJson = JsonObject()
                     curSubmitJson.addProperty("id", submit.id)
                     curSubmitJson.addProperty("status", submit.status)
-                    curSubmitJson.addProperty("time", submit.time.toString())
+                    curSubmitJson.addProperty("submTime", submit.submTime.toString())
                     curSubmitJson.addProperty("verdict", submit.verdict)
+                    curSubmitJson.addProperty("testId", submit.testId)
+                    curSubmitJson.addProperty("comment", submit.comment)
                     submitsJson.add(curSubmitJson)
                 }
 
@@ -75,7 +82,7 @@ fun Routing.route(database: Database) {
                 result.add("problem", taskJson)
                 result.add("submissions", submitsJson)
                 response.add("result", result)
-                call.respond(response)
+                call.respondText(response.toString(), ContentType.Application.Json)
             }
         }
     }

@@ -13,6 +13,9 @@ data class Submit (
         val prId: Int,
         val userId: Int,
         val status: String,
-        val time: Time,
-        val verdict: String
+        val submTime: Time,
+        val dockerReturn: String?,
+        val verdict: String?,
+        val testId: Int,
+        val comment: String?
 )

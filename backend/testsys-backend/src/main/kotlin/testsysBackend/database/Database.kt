@@ -68,11 +68,14 @@ class Database(private val path: String,
                     resultQuery.getInt("pr_id"),
                     resultQuery.getInt("user_id"),
                     resultQuery.getString("status"),
-                    resultQuery.getTime("time"),
-                    resultQuery.getString("verdict")
+                    resultQuery.getTime("submtime"),
+                    resultQuery.getString("docker_return"),
+                    resultQuery.getString("verdict"),
+                    resultQuery.getInt("testid"),
+                    resultQuery.getString("comment")
             ))
         }
-        submits.sortBy { it.time }
+        submits.sortBy { it.submTime }
         return submits
     }
 

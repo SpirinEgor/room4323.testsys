@@ -33,7 +33,9 @@ export class SubmitComponent implements OnInit {
 						let currentSubmit: Submit = {
 							id: submit['id'],
 							status: submit['status'],
-							test: submit['test'],
+							submTime: submit['submTime'],
+							verdict: submit['verdict'],
+							testId: submit['testId'],
 							comment: submit['comment']
 						}
 						this.submissions.push(currentSubmit)
@@ -58,6 +60,8 @@ export class SubmitComponent implements OnInit {
 class Submit {
 	id: number
 	status: string
-	test: number
+	submTime: string
+	verdict: string
+	testId: number
 	comment: string
 }
