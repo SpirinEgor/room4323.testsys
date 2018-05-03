@@ -1,7 +1,6 @@
 package testsysBackend.api
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
+import com.google.gson.*
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -10,24 +9,19 @@ import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
-import testsysBackend.database.Database
+import testsysBackend.database.*
 
 fun Routing.route(database: Database) {
     get("/api/tasks") {
         val tasks = database.getTasks()
-        val tasksJson = JsonArray()
-        for (task in tasks) {
-            val curTaskJson = JsonObject()
-            curTaskJson.addProperty("id", task.id)
-            curTaskJson.addProperty("name", task.name)
-            tasksJson.add(curTaskJson)
-        }
-        val allTasksJson = JsonObject()
-        allTasksJson.add("tasks", tasksJson)
-        val response = JsonObject()
-        response.addProperty("status", "OK")
-        response.add("result", allTasksJson)
-        call.respondText(response.toString(), ContentType.Application.Json)
+
+        val gson = GsonBuilder()
+                .setPrettyPrinting()
+                .setExclusionStrategies(ExcludeStatement())
+                .create()
+        val response = gson.toJson(Tasks(result= Result(tasks)))
+        call.respondText(response.toString(),ContentType.Application.Json)
+
     }
     get("/api/tasks/{id}") {
         val prId = call.parameters["id"]?.toInt()
@@ -38,13 +32,9 @@ fun Routing.route(database: Database) {
             if (task == null) {
                 call.respond(HttpStatusCode.NotFound)
             } else {
-                val taskJson = JsonObject()
-                taskJson.addProperty("id", task.id)
-                taskJson.addProperty("name", task.name)
-                taskJson.addProperty("statement", task.statement)
-                val response = JsonObject()
-                response.addProperty("status", "OK")
-                response.add("result", taskJson)
+
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val response = gson.toJson(TaskById(result = task))
                 call.respondText(response.toString(), ContentType.Application.Json)
             }
         }
@@ -60,28 +50,12 @@ fun Routing.route(database: Database) {
             } else {
                 val submits = database.getSubmits(prId)
 
-                val taskJson = JsonObject()
-                taskJson.addProperty("id", task.id)
-                taskJson.addProperty("name", task.name)
-
-                val submitsJson = JsonArray()
-                for (submit in submits) {
-                    val curSubmitJson = JsonObject()
-                    curSubmitJson.addProperty("id", submit.id)
-                    curSubmitJson.addProperty("status", submit.status)
-                    curSubmitJson.addProperty("submTime", submit.submTime.toString())
-                    curSubmitJson.addProperty("verdict", submit.verdict)
-                    curSubmitJson.addProperty("testId", submit.testId)
-                    curSubmitJson.addProperty("comment", submit.comment)
-                    submitsJson.add(curSubmitJson)
-                }
-
-                val response = JsonObject()
-                response.addProperty("status", "OK")
-                val result = JsonObject()
-                result.add("problem", taskJson)
-                result.add("submissions", submitsJson)
-                response.add("result", result)
+                val gson = GsonBuilder()
+                        .setPrettyPrinting()
+                        .setExclusionStrategies(ExcludeStatement())
+                        .serializeNulls()
+                        .create()
+                val response = gson.toJson(TasksIDSubmit(result = SubmitResult(task,submits)))
                 call.respondText(response.toString(), ContentType.Application.Json)
             }
         }
