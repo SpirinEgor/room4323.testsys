@@ -33,7 +33,9 @@
     "lodash": "4.17.10",
     "merge-stream": "1.0.1",
     "tslint": "5.10.0",
-    "typescript": "2.8.3"
+    "typescript": "2.8.3",
+    "hoek": "5.0.3",
+    "moment": "2.22.1"
   },
   "author": "",
   "license": "MIT"
