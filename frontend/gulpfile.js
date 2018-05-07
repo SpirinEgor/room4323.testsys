@@ -1,27 +1,12 @@
 'use strict';
 
 const gulp = require('gulp');
-const tsconfig = require('./tsconfig.json');
 const ts = require('gulp-typescript');
-const typescript = require('typescript');
 const del = require('del');
 const tslint = require('tslint');
 const gulpTsLint = require('gulp-tslint');
-const ngConstant = require('gulp-ng-constant');
-const browserify = require('gulp-browserify');
-const rename = require('gulp-rename');
-const less = require('gulp-less');
-const htmlReplace = require('gulp-html-replace');
-const execSync = require('child_process').execSync;
-const exec = require('child_process').exec;
-const gulpInject = require('gulp-inject');
-const gulpConcat = require('gulp-concat');
-const _ = require('lodash');
 const runSequence = require('run-sequence');
-const argv = require('yargs').argv;
 const mergeStream = require('merge-stream');
-const uglifyES = require('uglify-es');
-const uglifyComposer = require('gulp-uglify/composer');
 
 
 gulp.task('build', function() {

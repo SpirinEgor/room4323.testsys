@@ -1,6 +1,5 @@
 import { Injectable }               from '@angular/core'
-import { Http, RequestOptions,
-	Headers, RequestMethod }		from '@angular/http'
+import { Http }						from '@angular/http'
 
 import { successful, serverError }  from '../common/response'
 
