@@ -4,8 +4,8 @@ INSERT INTO Problems (name) VALUES ('Задача с русским назван
 INSERT INTO Problems (name) VALUES ('Задача A');
 INSERT INTO Problems (name) VALUES ('Задача B');
 
-INSERT INTO Users (login, fullname, pass) VALUES ('admarkov', 'Alexander Markov', 'hash');
-INSERT INTO Users (login, fullname, pass) VALUES ('nadmarkov', 'Александр Марков', 'anotherhash');
+INSERT INTO Users (username, fullname, pass) VALUES ('admarkov', 'Alexander Markov', 'hash');
+INSERT INTO Users (username, fullname, pass) VALUES ('nadmarkov', 'Александр Марков', 'anotherhash');
 
 INSERT INTO Submits (pr_id, user_id) VALUES(1, 1);
 UPDATE Submits SET status = 'finished', docker_return = 'array from docker', verdict = 'OK' where id = 1;
