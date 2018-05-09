@@ -21,8 +21,9 @@ CREATE TABLE Contests (
 
 CREATE TABLE Users (
     id integer primary key autoincrement,
-    username varchar(20) not null,
-    fullname text not null
+    login varchar(20) not null,
+    fullname text not null,
+    pass text not null
 );
 
 CREATE TABLE users_contests (
