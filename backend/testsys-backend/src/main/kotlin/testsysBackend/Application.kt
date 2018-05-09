@@ -1,18 +1,26 @@
 package testsysBackend
 
+
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CORS
 import io.ktor.features.CallLogging
+import io.ktor.locations.*
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
 import io.ktor.http.HttpHeaders
 import io.ktor.http.headersOf
-import io.ktor.routing.routing
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
+import io.ktor.routing.Routing
 import mu.KotlinLogging
-import testsysBackend.api.route
+import testsysBackend.api.*
 import testsysBackend.database.Database
+
+@Location("/login")
+data class Login(var username: String = "", var password: String = "")
+
 
 fun Application.main() {
 
@@ -35,8 +43,23 @@ fun Application.main() {
         anyHost()
         headersOf(HttpHeaders.AccessControlAllowOrigin, "*")
     }
+
+
+    val jwtRealm = environment.config.property("jwt.realm").getString()
+
+    install(Authentication) {
+        jwt {
+            val JWTVerifier = JWTConfig().makeJwtVerifier()
+            this@jwt.realm = jwtRealm
+            verifier(JWTVerifier)
+            validate{credentials -> JWTPrincipal(credentials.payload)}
+        }
+    }
+    install(Locations)
     install(CallLogging)
-    routing {
+    install(Routing) {
+        login()
         route(database)
     }
 }
+

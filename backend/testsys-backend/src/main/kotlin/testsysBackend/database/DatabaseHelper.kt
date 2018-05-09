@@ -12,12 +12,11 @@ class ExcludeStatement : ExclusionStrategy {
     }
 
     override fun shouldSkipField(f: FieldAttributes): Boolean {
-        //какие-то траблы если писать f.declaringClass == Submit
 
         return (f.declaringClass == Problem::class.java && f.name == "statement") ||
-                (f.name == "prId") ||
+                (f.declaringClass == Submit::class.java && (f.name == "prId" ||
                 f.name == "userId" ||
-                f.name == "dockerReturn"
+                f.name == "dockerReturn"))
     }
 
 }
