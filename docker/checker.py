@@ -3,8 +3,8 @@ import shutil
 import subprocess
 import os
 
-infoIn = open('data.json', 'r')
-infoOut = open('result.json', 'w')
+infoIn = open('/home/share/data.json', 'r')
+infoOut = open('/home/share/result.json', 'w')
 data = json.load(infoIn)
 infoIn.close()  # Open input & output files
 
@@ -28,7 +28,7 @@ problems_dir = '/home/problems/'
 link_task = os.path.join(problems_dir, data['path_to_task'])
 link_tests = os.path.join(link_task, 'tests')
 time_limit = data['time_limit']
-memory_limit = data['ml']
+memory_limit = data['memory_limit']
 
 tests = {}
 test_number = 1
@@ -86,11 +86,9 @@ for test in os.listdir(link_tests):  # Add test file, compile, check
             })
 
             test_number += 1
-
             if 'ok' not in verdict:
                 result['result']['verdict'] = 'WA'
                 break
 
 json.dump(result, infoOut)
 infoOut.close()
-subprocess.call("cat result.json", shell=True)
