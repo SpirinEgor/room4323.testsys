@@ -2,6 +2,8 @@ package testsysBackend.api
 
 import com.google.gson.GsonBuilder
 import io.ktor.application.call
+import io.ktor.auth.authenticate
+import io.ktor.auth.authentication
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
@@ -14,7 +16,7 @@ import mu.KLogger
 import testsysBackend.database.*
 
 fun Routing.route(database: Database, logger: KLogger) {
-//    authenticate {
+    authenticate {
         get("/api/tasks") {
             val tasks = database.getTasks()
             val gson = GsonBuilder()
@@ -64,6 +66,6 @@ fun Routing.route(database: Database, logger: KLogger) {
             logger.info { solution }
             call.respond(HttpStatusCode.OK)
         }
-//    }
+    }
 
 }

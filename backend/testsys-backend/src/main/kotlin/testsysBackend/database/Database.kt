@@ -1,7 +1,9 @@
 package testsysBackend.database
 
 import mu.KLogger
+import testsysBackend.api.JWTConfig
 import java.sql.*
+import testsysBackend.api.Login
 
 class Database(private val path: String,
                private val logger: KLogger) {
@@ -77,6 +79,21 @@ class Database(private val path: String,
         }
         submits.sortBy { it.submTime }
         return submits
+    }
+
+    fun getUserToken(username: String, password: String): String? {
+        val resultQuery: ResultSet
+        try {
+            resultQuery = dbStatement!!.executeQuery(
+                    "SELECT * FROM Users WHERE username = '$username'"
+            )
+        } catch (ex: SQLException) {
+            logger.error { ex }
+            return null
+        }
+        return JWTConfig().createToken(1)
+
+
     }
 
 }

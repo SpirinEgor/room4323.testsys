@@ -61,7 +61,7 @@ fun Application.main() {
     install(Locations)
     install(CallLogging)
     install(Routing) {
-        login()
+        login(database)
         route(database, logger)
     }
 }
