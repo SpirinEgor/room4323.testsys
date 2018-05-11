@@ -1,5 +1,6 @@
 <h1>{{problemName}}</h1>
-<textarea #input (keyup)="update(input.value)"
+<input type="file" (change)="uploadSolution($event.target.files)"><br>
+<textarea #input (keyup)="update(input.value)" id="submitArea"
             rows="20" type="text" placeholder="Input your solution here..."></textarea><br>
 <button (click)="submitSolution()">Submit</button>
 <ul>

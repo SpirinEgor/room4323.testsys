@@ -19,9 +19,9 @@ class Database(private val path: String,
         }
     }
 
-    fun getTasks(): Set<Problem> {
+    fun getTasks(): List<Problem> {
         val resultQuery: ResultSet
-        val tasks = mutableSetOf<Problem>()
+        val tasks = mutableListOf<Problem>()
         try {
             resultQuery = dbStatement!!.executeQuery(
                     "SELECT * FROM Problems"

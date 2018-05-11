@@ -29,6 +29,7 @@ export class SubmitComponent implements OnInit {
 				problemStatus => {
 					this.problemId = problemStatus['problem']['id']
 					this.problemName = problemStatus['problem']['name']
+					this.submissions = []
 					for (let submit of problemStatus['submissions']) {
 						let currentSubmit: Submit = {
 							id: submit['id'],
@@ -48,11 +49,29 @@ export class SubmitComponent implements OnInit {
 		this.participantCode = newCode
 	}
 
+	uglify(text: string) {
+		let re = /"/gi
+		let new_text = text.replace(re, '/"')
+		return new_text
+	}
+
 	submitSolution() {
-		this.submitService.submit(this.problemId, this.participantCode)
+		this.submitService.submit(this.problemId, uglify(this.participantCode))
 			.then(
-				response => {}
+				response => {
+					this.ngOnInit()
+				}
 			)
+	}
+
+	uploadSolution(fileList: FileList) {
+		let fileReader = new FileReader()
+		fileReader.onload = (e) => {
+				this.participantCode = fileReader.result
+				let submitArea = document.getElementById("submitArea")
+				submitArea.innerHTML = this.participantCode
+			}
+		fileReader.readAsText(fileList[0])
 	}
 
 }

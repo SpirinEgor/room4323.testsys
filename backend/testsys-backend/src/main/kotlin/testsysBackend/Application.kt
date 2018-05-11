@@ -3,32 +3,34 @@ package testsysBackend
 
 import io.ktor.application.Application
 import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.jwt.JWTPrincipal
+import io.ktor.auth.jwt.jwt
 import io.ktor.features.CORS
 import io.ktor.features.CallLogging
-import io.ktor.locations.*
 import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
 import io.ktor.http.HttpHeaders
 import io.ktor.http.headersOf
-import io.ktor.auth.*
-import io.ktor.auth.jwt.*
+import io.ktor.locations.Locations
 import io.ktor.routing.Routing
 import mu.KotlinLogging
-import testsysBackend.api.*
+import testsysBackend.api.JWTConfig
+import testsysBackend.api.login
+import testsysBackend.api.route
 import testsysBackend.database.Database
-
-@Location("/login")
-data class Login(var username: String = "", var password: String = "")
-
+import java.text.DateFormat
 
 fun Application.main() {
 
     val logger = KotlinLogging.logger {}
+
     val path = System.getProperty("user.dir").split("/")
             .dropLast(2).foldRight("", { a, b -> "$a/$b" })
     val database = Database("$path/database/testsys.db",
             logger)
+
+    val jwtRealm = environment.config.property("jwt.realm").getString()
 
     val databaseConnect = database.connect()
     if (databaseConnect != "OK") {
@@ -39,19 +41,20 @@ fun Application.main() {
     }
 
     install(CORS) {
-//        header(HttpHeaders.AccessControlAllowOrigin)
         anyHost()
         headersOf(HttpHeaders.AccessControlAllowOrigin, "*")
     }
-
-
-    val jwtRealm = environment.config.property("jwt.realm").getString()
-
+    install(ContentNegotiation) {
+        gson {
+            setDateFormat(DateFormat.LONG)
+            setPrettyPrinting()
+        }
+    }
     install(Authentication) {
         jwt {
-            val JWTVerifier = JWTConfig().makeJwtVerifier()
+            val jwtVerifier = JWTConfig().makeJwtVerifier()
             this@jwt.realm = jwtRealm
-            verifier(JWTVerifier)
+            verifier(jwtVerifier)
             validate{credentials -> JWTPrincipal(credentials.payload)}
         }
     }
@@ -59,7 +62,6 @@ fun Application.main() {
     install(CallLogging)
     install(Routing) {
         login()
-        route(database)
+        route(database, logger)
     }
 }
-

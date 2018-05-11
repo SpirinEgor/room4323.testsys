@@ -1,38 +1,35 @@
 package testsysBackend.api
 
-import io.ktor.application.*
+import com.auth0.jwt.JWT
+import com.auth0.jwt.JWTVerifier
+import com.auth0.jwt.algorithms.Algorithm
+import io.ktor.application.call
 import io.ktor.auth.UserHashedTableAuth
 import io.ktor.auth.UserPasswordCredential
-import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.util.decodeBase64
-import testsysBackend.Login
-import com.auth0.jwt.*
-import com.auth0.jwt.algorithms.*
 import io.ktor.http.HttpHeaders.Authorization
+import io.ktor.http.HttpStatusCode
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.Routing
+import io.ktor.routing.post
+import io.ktor.util.decodeBase64
 
 val hashedUserTable = UserHashedTableAuth(table = mapOf(
         "test" to decodeBase64("VltM4nfheqcJSyH887H+4NEOm2tDuKCl83p5axYXlF0=") // sha256 for "test"
 ))
 
 fun Routing.login(){
-    post<Login>{
-        val post = call.receive<Parameters>()
-        val username = post["username"] ?: ""
-        val password = post["password"] ?: ""
+    post("/api/login"){
+        val post = call.receive<Login>()
+        val username = post.username
+        val password = post.password
         val user = hashedUserTable.authenticate(UserPasswordCredential(username,password))
-        if(user!=null){
+        if (user != null){
             val token = JWTConfig().createToken()
             call.response.headers.append(Authorization,token)
             call.respond(HttpStatusCode.OK)
         }
         else call.respond(HttpStatusCode.Unauthorized)
-
-
-
     }
 }
 

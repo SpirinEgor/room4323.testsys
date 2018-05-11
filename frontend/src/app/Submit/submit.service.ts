@@ -29,12 +29,11 @@ export class SubmitService {
 						.catch(this.handleError)
 	}
 
-	submit(id: number, participantCode: string) {
+	submit(prId: number, code: string) {
 		const body = {
-			'id': id,
-			'participantCode': participantCode
+			'code': code
 		}
-		return this.$http.post('http://localhost:8080', body)
+		return this.$http.post('http://localhost:8000/api/tasks/' + prId + '/submit', body)
 			.toPromise()
 			.then(
 				response => {

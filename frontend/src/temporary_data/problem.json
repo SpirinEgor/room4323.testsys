@@ -1,8 +1,0 @@
-{
-    "status": "OK",
-    "result": {
-        "id": 1,
-        "name": "A + B",
-        "statement": "сложить 2 числа"
-    }
-}
