@@ -3,7 +3,6 @@ package testsysBackend.database
 import mu.KLogger
 import testsysBackend.api.JWTConfig
 import java.sql.*
-import testsysBackend.api.Login
 
 class Database(private val path: String,
                private val logger: KLogger) {
@@ -91,7 +90,10 @@ class Database(private val path: String,
             logger.error { ex }
             return null
         }
-        return JWTConfig().createToken(1)
+        return if(resultQuery.getString("pass") == password){
+            JWTConfig().createToken(resultQuery.getInt("id"))
+        }
+        else null
 
 
     }
