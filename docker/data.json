@@ -1,7 +1,0 @@
-{
-    "language" : "C++",
-    "code": "#include <cstdio> #include <cassert> #include <iostream> using namespace std; #define NAME \"sum\" int main() { assert(freopen(NAME \".in\", \"r\", stdin)); assert(freopen(NAME \".out\", \"w\", stdout)); long long a, b; cin >> a >> b; cout << a + b << endl; return 0; }",
-    "path_to_task": "sum",
-    "time_limit": "100",
-    "ml": "100" 
-}

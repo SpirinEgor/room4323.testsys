@@ -51,12 +51,16 @@ export class SubmitComponent implements OnInit {
 
 	uglify(text: string) {
 		let re = /"/gi
-		let new_text = text.replace(re, '/"')
+		let new_text = text.replace(re, '\\"')
+		re = /\n/gi
+		new_text = new_text.replace(re, '\\n')
+		re = /\t/gi
+		new_text = new_text.replace(re, '\\t')
 		return new_text
 	}
 
 	submitSolution() {
-		this.submitService.submit(this.problemId, uglify(this.participantCode))
+		this.submitService.submit(this.problemId, this.uglify(this.participantCode))
 			.then(
 				response => {
 					this.ngOnInit()
@@ -68,7 +72,7 @@ export class SubmitComponent implements OnInit {
 		let fileReader = new FileReader()
 		fileReader.onload = (e) => {
 				this.participantCode = fileReader.result
-				let submitArea = document.getElementById("submitArea")
+				let submitArea = document.getElementById('submitArea')
 				submitArea.innerHTML = this.participantCode
 			}
 		fileReader.readAsText(fileList[0])
