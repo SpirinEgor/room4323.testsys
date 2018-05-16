@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.auth.authentication
+import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
@@ -13,17 +14,19 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import mu.KLogger
-import testsysBackend.database.*
+import testsysBackend.database.Database
+import testsysBackend.judge.TestSystem
 
-fun Routing.route(database: Database, logger: KLogger) {
+fun Routing.route(database: Database, logger: KLogger, testSystem: TestSystem) {
     authenticate {
         get("/api/tasks") {
             val tasks = database.getTasks()
             val gson = GsonBuilder()
                     .setPrettyPrinting()
                     .setExclusionStrategies(ExcludeStatement())
+                    .serializeNulls()
                     .create()
-            val response = gson.toJson(Tasks(result = Result(tasks)))
+            val response = gson.toJson(TasksResult(result = ProblemList(tasks)))
             call.respondText(response.toString(), ContentType.Application.Json)
         }
         get("/api/tasks/{prId}") {
@@ -35,8 +38,12 @@ fun Routing.route(database: Database, logger: KLogger) {
                 if (task == null) {
                     call.respond(HttpStatusCode.NotFound)
                 } else {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val response = gson.toJson(TaskById(result = task))
+                    val gson = GsonBuilder()
+                            .setPrettyPrinting()
+                            .setExclusionStrategies(ExcludeStatement())
+                            .serializeNulls()
+                            .create()
+                    val response = gson.toJson(TaskByIdResult(result = task))
                     call.respondText(response.toString(), ContentType.Application.Json)
                 }
             }
@@ -56,15 +63,35 @@ fun Routing.route(database: Database, logger: KLogger) {
                             .setExclusionStrategies(ExcludeStatement())
                             .serializeNulls()
                             .create()
-                    val response = gson.toJson(TasksIDSubmit(result = SubmitResult(task, submits)))
+                    val response = gson.toJson(TaskSubmitsResult(result = Submits(task, submits)))
                     call.respondText(response.toString(), ContentType.Application.Json)
                 }
             }
         }
         post("/api/tasks/{id}/submit") {
             val solution = call.receive<Solution>()
-            logger.info { solution }
-            call.respond(HttpStatusCode.OK)
+            val userId = call.authentication.principal<JWTPrincipal>()
+                        ?.payload!!.claims["userId"]?.asInt()
+            val prId = call.parameters["id"]?.toInt()
+            if (prId == null || userId == null) {
+                call.respond(HttpStatusCode.NotFound)
+            }
+            val submitId = database.setSubmitIntoQueue(userId!!, prId!!)
+            if (submitId == null) {
+                call.respond(HttpStatusCode.BadRequest)
+            }
+            val params = mapOf(
+                    "language" to solution.language,
+                    "code" to solution.code
+            )
+            testSystem.putIntoQueue(params, submitId!!)
+            val gson = GsonBuilder()
+                    .setPrettyPrinting()
+                    .setExclusionStrategies(ExcludeStatement())
+                    .serializeNulls()
+                    .create()
+            val response = gson.toJson(OKResult())
+            call.respondText(response.toString(), ContentType.Application.Json)
         }
     }
 

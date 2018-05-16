@@ -1,21 +1,28 @@
 import { Injectable }               from '@angular/core'
-import { Http }						from '@angular/http'
+import { Http, Headers }			from '@angular/http'
+import { Router }					from '@angular/router'
 
 import { successful, serverError }  from '../common/response'
-
-import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class TasksService {
 
-	constructor(private $http: Http) { }
+	constructor(private $http: Http,
+				private router: Router) { }
 
-	private handleError(error: any) {
-		alert(serverError)
+	private handleError(e: Response) {
+		if (e.status === 401) {
+			this.router.navigate(['/'])
+		} else {
+			alert(serverError)
+		}
 	}
 
 	getAllTasks() {
-		return this.$http.get('http://localhost:8000/api/tasks')
+		const headers = new Headers({
+			'Authorization': `Bearer ${localStorage.getItem('token')}`
+		})
+		return this.$http.get('http://localhost:8000/api/tasks', { headers: headers })
 						.toPromise()
 						.then(
 							response => {

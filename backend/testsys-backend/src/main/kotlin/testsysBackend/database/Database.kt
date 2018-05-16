@@ -1,8 +1,10 @@
 package testsysBackend.database
 
 import mu.KLogger
-import testsysBackend.api.JWTConfig
-import java.sql.*
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.sql.Statement
 
 class Database(private val path: String,
                private val logger: KLogger) {
@@ -80,7 +82,7 @@ class Database(private val path: String,
         return submits
     }
 
-    fun getUserToken(username: String, password: String): String? {
+    fun getUserByUsername(username: String): User? {
         val resultQuery: ResultSet
         try {
             resultQuery = dbStatement!!.executeQuery(
@@ -90,12 +92,55 @@ class Database(private val path: String,
             logger.error { ex }
             return null
         }
-        return if(resultQuery.getString("pass") == password){
-            JWTConfig().createToken(resultQuery.getInt("id"))
+        return if (resultQuery.next()) {
+            User(
+                    resultQuery.getInt("id"),
+                    resultQuery.getString("username"),
+                    resultQuery.getString("fullname"),
+                    resultQuery.getString("pass"))
+        } else {
+            null
         }
-        else null
+    }
 
+    fun setSubmitIntoQueue(userId: Int, prId: Int): Int? {
+        val resultQuery: ResultSet
+        try {
+            dbStatement!!.executeUpdate(
+                    "INSERT INTO Submits (pr_id, user_id) VALUES(${prId}, ${userId})"
+            )
+            resultQuery = dbStatement!!.generatedKeys
+            resultQuery.next()
+        } catch (ex: SQLException) {
+            logger.error { ex }
+            return null
+        }
+        return resultQuery.getInt(1)
+    }
 
+    fun setSubmitStatusRunning(submitId: Int): Boolean {
+        return try {
+            dbStatement!!.executeUpdate(
+                    "UPDATE Submits SET status = 'running' where id = $submitId"
+            )
+            true
+        } catch (ex: SQLException) {
+            logger.error { ex }
+            false
+        }
+    }
+
+    fun setSubmitVerdictOK(submitId: Int, dockerReturn: String = ""): Boolean {
+        return try {
+            dbStatement!!.executeUpdate(
+                    "UPDATE Submits SET status = 'finished', " +
+                            "docker_return = '${dockerReturn}', verdict = 'OK' where id = $submitId"
+            )
+            true
+        } catch (ex: SQLException) {
+            logger.error { ex }
+            false
+        }
     }
 
 }

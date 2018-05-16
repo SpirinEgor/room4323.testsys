@@ -38,7 +38,7 @@ gulp.task('copy-static', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('src/**/*.ts', ['ts']);
+    gulp.watch('src/**/*.ts', ['ts', 'tslint']);
     gulp.watch('src/**/*.html', ['copy-static']);
     gulp.watch('src/*.js', ['copy-static']);
     gulp.watch('src/images/*.*', ['copy-static']);

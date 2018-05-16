@@ -1,9 +1,9 @@
 <form action="">
   login:<br>
-  <input type="text" name="login">
+  <input type="text" #username (keyup)="update(username.value, password.value)">
   <br>
   password:<br>
-  <input type="password" name="password">
+  <input type="password" #password (keyup)="update(username.value, password.value)">
   <br><br>
-  <input type="submit" value="Login" routerLink="/task/all" routerLinkActive="active"> 
+  <input type="submit" value="Login" (click)="login()"> 
 </form> 

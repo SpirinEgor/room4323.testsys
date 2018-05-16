@@ -1,7 +1,8 @@
-package testsysBackend.judje
+package testsysBackend.judge
 
-interface IJudje {
+interface IJudge {
 
-    
+    fun connect(args: List<String>): Boolean
+    fun test(params: Map<String, String>): Map<String, String>?
 
 }

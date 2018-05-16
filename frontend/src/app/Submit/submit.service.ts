@@ -1,21 +1,30 @@
-import { Injectable }               from '@angular/core'
-import { Http }                     from '@angular/http'
+import { Injectable }						from '@angular/core'
+import { Http, Headers }					from '@angular/http'
+import { Router }							from '@angular/router'
 
-import { successful, error, serverError }  from '../common/response'
+import { successful, error, serverError }	from '../common/response'
 
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class SubmitService {
 
-	constructor(private $http: Http) { }
+	constructor(private $http: Http,
+				private router: Router) { }
 
-	private handleError(e: any) {
-		alert(serverError)
+	private handleError(e: Response) {
+		if (e.status === 401) {
+			this.router.navigate(['/'])
+		} else {
+			alert(serverError)
+		}
 	}
 
 	getStatus(id: string) {
-		return this.$http.get('http://localhost:8000/api/tasks/' + id + '/status')
+		const headers = new Headers({
+			'Authorization': `Bearer ${localStorage.getItem('token')}`
+		})
+		return this.$http.get(`http://localhost:8000/api/tasks/${id}/status`, { headers: headers })
 						.toPromise()
 						.then(
 							response => {
@@ -33,7 +42,10 @@ export class SubmitService {
 		const body = {
 			'code': code
 		}
-		return this.$http.post('http://localhost:8000/api/tasks/' + prId + '/submit', body)
+		const headers = new Headers({
+			'Authorization': `Bearer ${localStorage.getItem('token')}`
+		})
+		return this.$http.post(`http://localhost:8000/api/tasks/${prId}/submit`, body, { headers: headers })
 			.toPromise()
 			.then(
 				response => {

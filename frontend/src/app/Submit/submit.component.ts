@@ -50,12 +50,14 @@ export class SubmitComponent implements OnInit {
 	}
 
 	uglify(text: string) {
-		let re = /"/gi
-		let new_text = text.replace(re, '\\"')
-		re = /\n/gi
-		new_text = new_text.replace(re, '\\n')
-		re = /\t/gi
-		new_text = new_text.replace(re, '\\t')
+		let from = [/"/gi, /\n/gi, /\t/gi]
+		let to = ['\\"', '\\n', '\\t']
+		let new_text = text
+		for (let i in from) {
+			if (from.hasOwnProperty(i) && to.hasOwnProperty(i)) {
+				new_text = new_text.replace(from[i], to[i])
+			}
+		}
 		return new_text
 	}
 

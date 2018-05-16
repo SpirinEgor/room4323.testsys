@@ -13,17 +13,16 @@ export class TasksComponent implements OnInit {
 	constructor(private tasksService: TasksService) { }
 
 	getAllTasks() {
-		this.tasksService.getAllTasks().then(
-			allTasks => {
+		this.tasksService.getAllTasks()
+			.then(allTasks => {
 				for (let task of allTasks['tasks']) {
 					let currentTask: Task = {
 						id: task['id'],
 						name: task['name']
 					}
-					this.allTasks.push(currentTask)
-				}
+				this.allTasks.push(currentTask)
 			}
-		)
+		})
 	}
 
 	ngOnInit() {

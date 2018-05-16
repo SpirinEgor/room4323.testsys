@@ -1,5 +1,6 @@
 import { Injectable }               from '@angular/core'
-import { Http }                     from '@angular/http'
+import { Http, Headers }            from '@angular/http'
+import { Router }					from '@angular/router'
 
 import { successful, serverError }  from '../common/response'
 
@@ -8,14 +9,22 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ProblemService {
 
-	constructor(private $http: Http) { }
+	constructor(private $http: Http,
+				private router: Router) { }
 
-	private handleError(error: any) {
-		alert(serverError)
+	private handleError(e: Response) {
+		if (e.status === 401) {
+			this.router.navigate(['/'])
+		} else {
+			alert(serverError)
+		}
 	}
 
 	getProblem(id: string) {
-		return this.$http.get('http://localhost:8000/api/tasks/' + id)
+		const headers = new Headers({
+			'Authorization': `Bearer ${localStorage.getItem('token')}`
+		})
+		return this.$http.get(`http://localhost:8000/api/tasks/${id}`, { headers: headers })
 						.toPromise()
 						.then(
 							response => {

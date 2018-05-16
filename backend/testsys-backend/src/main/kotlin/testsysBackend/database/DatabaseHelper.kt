@@ -19,3 +19,10 @@ data class Submit (
         val testId: Int,
         val comment: String?
 )
+
+data class User (
+        val id: Int,
+        val username: String,
+        val fullname: String,
+        val pass: String
+)
