@@ -38,9 +38,28 @@ export class SubmitService {
 						.catch(this.handleError)
 	}
 
-	submit(prId: number, code: string) {
+	getLanguages() {
+		const headers = new Headers({
+			'Authorization': `Bearer ${localStorage.getItem('token')}`
+		})
+		return this.$http.get(`http://localhost:8000/api/languages`, { headers: headers })
+						.toPromise()
+						.then(
+							response => {
+								if (response.json().status === successful) {
+									return response.json().result
+								} else {
+									alert(serverError)
+								}
+							}
+						)
+						.catch(this.handleError)
+	}
+
+	submit(prId: number, code: string, language: string) {
 		const body = {
-			'code': code
+			'code': code,
+			'language': language
 		}
 		const headers = new Headers({
 			'Authorization': `Bearer ${localStorage.getItem('token')}`

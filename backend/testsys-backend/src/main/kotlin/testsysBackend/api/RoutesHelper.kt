@@ -42,6 +42,10 @@ data class UserResult (
         val result: User
 )
 
+data class LanguagesResult (
+        val status: String = "OK",
+        val result: Language
+)
 
 data class Submits (
         val problem: Problem,
@@ -60,4 +64,8 @@ data class Solution (
 data class Login (
         val username: String,
         val password: String
+)
+
+data class Language (
+        val languages: List<String>
 )

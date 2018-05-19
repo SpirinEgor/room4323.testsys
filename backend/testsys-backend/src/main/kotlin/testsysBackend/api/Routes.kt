@@ -15,6 +15,7 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import mu.KLogger
 import testsysBackend.database.Database
+import testsysBackend.judge.SubmitRequest
 import testsysBackend.judge.TestSystem
 
 fun Routing.route(database: Database, logger: KLogger, testSystem: TestSystem) {
@@ -50,14 +51,16 @@ fun Routing.route(database: Database, logger: KLogger, testSystem: TestSystem) {
         }
         get("/api/tasks/{id}/status") {
             val prId = call.parameters["id"]?.toInt()
-            if (prId == null) {
+            val userId = call.authentication.principal<JWTPrincipal>()
+                        ?.payload!!.claims["userId"]?.asInt()
+            if (prId == null || userId == null) {
                 call.respond { HttpStatusCode.BadGateway }
             } else {
                 val task = database.getTask(prId)
                 if (task == null) {
                     call.respond(HttpStatusCode.NotFound)
                 } else {
-                    val submits = database.getSubmits(prId)
+                    val submits = database.getSubmits(userId, prId)
                     val gson = GsonBuilder()
                             .setPrettyPrinting()
                             .setExclusionStrategies(ExcludeStatement())
@@ -80,9 +83,12 @@ fun Routing.route(database: Database, logger: KLogger, testSystem: TestSystem) {
             if (submitId == null) {
                 call.respond(HttpStatusCode.BadRequest)
             }
-            val params = mapOf(
-                    "language" to solution.language,
-                    "code" to solution.code
+            val params = SubmitRequest(
+                    solution.language,
+                    solution.code,
+                    "sum",
+                    100,
+                    100
             )
             testSystem.putIntoQueue(params, submitId!!)
             val gson = GsonBuilder()
@@ -91,6 +97,16 @@ fun Routing.route(database: Database, logger: KLogger, testSystem: TestSystem) {
                     .serializeNulls()
                     .create()
             val response = gson.toJson(OKResult())
+            call.respondText(response.toString(), ContentType.Application.Json)
+        }
+        get("/api/languages") {
+            val languages = Language(listOf("C++", "Python", "C", "Java", "Kotlin"))
+            val gson = GsonBuilder()
+                    .setPrettyPrinting()
+                    .setExclusionStrategies(ExcludeStatement())
+                    .serializeNulls()
+                    .create()
+            val response = gson.toJson(LanguagesResult(result = languages))
             call.respondText(response.toString(), ContentType.Application.Json)
         }
     }

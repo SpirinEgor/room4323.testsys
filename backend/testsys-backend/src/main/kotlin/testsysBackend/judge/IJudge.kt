@@ -1,8 +1,13 @@
 package testsysBackend.judge
 
+import mu.KLogger
+
 interface IJudge {
 
-    fun connect(args: List<String>): Boolean
-    fun test(params: Map<String, String>): Map<String, String>?
+    val args: List<String>
+    val logger: KLogger
+
+    fun connect(): Boolean
+    fun test(params: SubmitRequest): CheckerResponse?
 
 }

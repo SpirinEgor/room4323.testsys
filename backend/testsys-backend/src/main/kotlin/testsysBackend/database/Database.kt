@@ -54,12 +54,12 @@ class Database(private val path: String,
                         resultQuery.getString("name"))
     }
 
-    fun getSubmits(prId: Int): List<Submit> {
+    fun getSubmits(userId: Int, prId: Int): List<Submit> {
         val resultQuery: ResultSet
         val submits = mutableListOf<Submit>()
         try {
             resultQuery = dbStatement!!.executeQuery(
-                    "SELECT * FROM Submits WHERE pr_id = $prId"
+                    "SELECT * from Submits where user_id = $userId and pr_id = $prId"
             )
         } catch (ex: SQLException) {
             logger.error { ex }
@@ -107,7 +107,7 @@ class Database(private val path: String,
         val resultQuery: ResultSet
         try {
             dbStatement!!.executeUpdate(
-                    "INSERT INTO Submits (pr_id, user_id) VALUES(${prId}, ${userId})"
+                    "INSERT INTO Submits (pr_id, user_id) VALUES($prId, $userId)"
             )
             resultQuery = dbStatement!!.generatedKeys
             resultQuery.next()
@@ -134,7 +134,22 @@ class Database(private val path: String,
         return try {
             dbStatement!!.executeUpdate(
                     "UPDATE Submits SET status = 'finished', " +
-                            "docker_return = '${dockerReturn}', verdict = 'OK' where id = $submitId"
+                            "docker_return = '$dockerReturn', verdict = 'OK' where id = $submitId"
+            )
+            true
+        } catch (ex: SQLException) {
+            logger.error { ex }
+            false
+        }
+    }
+
+    fun setSubmitVerdictFail(submitId: Int, dockerReturn: String = "", verdict: String,
+                             testId: Int, testComment: String): Boolean {
+        return try {
+            dbStatement!!.executeUpdate(
+                    "UPDATE Submits SET status = 'finished', " +
+                            "docker_return = '$dockerReturn', verdict = '$verdict', " +
+                            "testid = $testId, comment = '$testComment' where id = $submitId"
             )
             true
         } catch (ex: SQLException) {

@@ -48,8 +48,8 @@ fun Application.main() {
 
     // connect to judges, create TestSystem
     val judges = listOf<IJudge>(
-            DockerJudge()
-            )
+            DockerJudge(listOf("http://localhost:5000"), logger)
+            ).filter { it.connect() }
     val testSystem = TestSystem(judges, database, logger)
 
     // install env

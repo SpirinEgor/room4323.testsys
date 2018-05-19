@@ -82,7 +82,8 @@ for test in os.listdir(link_tests):  # Add test file, compile, check
 
             # Save to result
             result['result']['tests'].append({
-                test_number: verdict
+                'test_number': int(test),
+                'checker_comment': verdict
             })
 
             test_number += 1

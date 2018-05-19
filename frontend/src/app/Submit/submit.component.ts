@@ -15,6 +15,8 @@ export class SubmitComponent implements OnInit {
 	problemId = 0
 	participantCode = ''
 	submissions: Submit[] = []
+	languages: string[] = []
+	selectLanguage: string
 
 	constructor(
 		private submitService: SubmitService,
@@ -43,6 +45,17 @@ export class SubmitComponent implements OnInit {
 					}
 				}
 			)
+		this.submitService.getLanguages()
+			.then(response => {
+				for (let i in response['languages']) {
+					if (response['languages'].hasOwnProperty(i)) {
+						this.languages.push(response['languages'][i])
+					}
+				}
+				if (this.languages.length > 0) {
+					this.selectLanguage = this.languages[0]
+				}
+			})
 	}
 
 	update(newCode: string) {
@@ -62,7 +75,7 @@ export class SubmitComponent implements OnInit {
 	}
 
 	submitSolution() {
-		this.submitService.submit(this.problemId, this.uglify(this.participantCode))
+		this.submitService.submit(this.problemId, this.uglify(this.participantCode), this.selectLanguage)
 			.then(
 				response => {
 					this.ngOnInit()
