@@ -18,7 +18,9 @@ export class TasksComponent implements OnInit {
 				for (let task of allTasks['tasks']) {
 					let currentTask: Task = {
 						id: task['id'],
-						name: task['name']
+						name: task['name'],
+						timeLimit: task['timeLimit'],
+						memoryLimit: task['memoryLimit']
 					}
 				this.allTasks.push(currentTask)
 			}
@@ -33,4 +35,6 @@ export class TasksComponent implements OnInit {
 class Task {
 	id: number
 	name: string
+	timeLimit: number
+	memoryLimit: number
 }

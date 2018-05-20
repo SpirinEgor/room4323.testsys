@@ -1,6 +1,9 @@
 CREATE TABLE Problems (
     id integer primary key autoincrement,
-    name text not null
+    name text not null,
+    path text not null,
+    time_limit integer not null,
+    memory_limit integer not null
 );
 
 CREATE TABLE Tags (

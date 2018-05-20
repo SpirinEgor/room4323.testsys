@@ -2,7 +2,8 @@ import { Injectable }               from '@angular/core'
 import { Http, Headers }			from '@angular/http'
 import { Router }					from '@angular/router'
 
-import { successful, serverError }  from '../common/response'
+import { successful, serverError }	from '../common/response'
+import { showErrorToast } 			from '../common/alert'
 
 @Injectable()
 export class TasksService {
@@ -14,7 +15,7 @@ export class TasksService {
 		if (e.status === 401) {
 			this.router.navigate(['/'])
 		} else {
-			alert(serverError)
+			showErrorToast(serverError)
 		}
 	}
 

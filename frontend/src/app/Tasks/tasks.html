@@ -1,5 +1,22 @@
-<div *ngFor="let task of allTasks">
-  <a routerLink="/task/{{task.id}}" routerLinkActive="active">
-    <u>{{task.name}}</u><br>
-  </a>
-</div>
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Time limit</th>
+      <th scope="col">Memory limit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of allTasks"> 
+      <th scope="row">{{task.id}}</th>
+      <td>
+        <a routerLink="/task/{{task.id}}" routerLinkActive="active">
+          <u>{{task.name}}</u><br>
+        </a>
+      </td>
+      <td>{{task.timeLimit}}</td>
+      <td>{{task.memoryLimit}}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,7 +1,9 @@
 import { Injectable }               from '@angular/core'
 import { Http }                     from '@angular/http'
 
-import { successful, serverError }  from '../common/response'
+import { successful, serverError,
+			wrongCredentials }  	from '../common/response'
+import { showErrorToast } 			from '../common/alert'
 
 import 'rxjs/add/operator/toPromise';
 
@@ -12,9 +14,9 @@ export class LoginService {
 
 	private handleError(error: Response) {
 		if (error.status === 401) {
-			alert('Wrong password or username')
+			showErrorToast(wrongCredentials)
 		} else {
-			alert(serverError + '\n' + error)
+			showErrorToast(serverError)
 		}
 	}
 

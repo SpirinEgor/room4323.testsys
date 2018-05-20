@@ -1,9 +1,13 @@
-<form action="">
-  login:<br>
-  <input type="text" #username (keyup)="update(username.value, password.value)">
-  <br>
-  password:<br>
-  <input type="password" #password (keyup)="update(username.value, password.value)">
-  <br><br>
-  <input type="submit" value="Login" (click)="login()"> 
-</form> 
+<div class="center">
+<form>
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Login"
+            #username (keyup)="update(username.value, password.value)">
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
+            #password (keyup)="update(username.value, password.value)">
+  </div>
+  <button type="submit" class="btn btn-outline-dark" (click)="login()">Sign in</button>
+</form>
+</div>

@@ -1,4 +1,61 @@
-<h1>{{name}}</h1>
-<p>{{statement}}</p>
-<button routerLink="/task/{{id}}/submit" routerLinkActive="active">Submit</button><br>
-<button routerLink="/task/all" routerLinkActive="active">Return</button>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col text-center">
+			<h1>{{name}}</h1>
+			<p class="mt-0 mb-0">Time limit: {{timeLimit}} sec.</p>
+			<p class="mt-0">Memory limit: {{memoryLimit}} mb.</p>
+			<pre>
+place for statement
+
+
+
+
+
+
+{{statement}}
+            </pre>
+		</div>
+		<div class="col">
+			<form>
+				<p>Enter your solution</p>
+				<div class="form-group">
+					<select class="form-control" [(ngModel)]="selectLanguage" name="language">
+						<option *ngFor="let lang of languages">{{lang}}</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control text-monospace" rows="10" id="submitArea"
+							#code (keyup)="update(code.value)"></textarea>
+				</div>
+				<div class="form-group">
+					<input type="file" class="form-control-file"
+							#file (change)="uploadSolution($event.target.files)">
+				</div>
+				<button type="submit" class="btn btn-outline-dark" (click)="submitSolution()">Submit</button>
+			</form>
+			<br>
+			<table class="table table-hover">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Time</th>
+						<th scope="col">Status</th>
+						<th scope="col">Verdict</th>
+						<th scope="col">Test</th>
+						<th scope="col">Comment</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let submit of submissions"> 
+						<th scope="row">{{submit.id}}</th>
+						<td>{{submit.submTime}}</td>
+						<td>{{submit.status}}</td>
+						<td>{{submit.verdict}}</td>
+						<td>{{submit.testId}}</td>
+						<td>{{submit.comment}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

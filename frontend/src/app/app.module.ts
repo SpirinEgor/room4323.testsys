@@ -11,12 +11,10 @@ import { MainComponent}			from './Main/main.component'
 import { LoginComponent }		from './Login/login.component'
 import { TasksComponent }		from './Tasks/tasks.component'
 import { ProblemComponent }		from './Problem/problem.component'
-import { SubmitComponent }		from './Submit/submit.component'
 
 import { LoginService }			from './Login/login.service'
 import { TasksService }			from './Tasks/tasks.service'
 import { ProblemService }		from './Problem/problem.service'
-import { SubmitService }		from './Submit/submit.service'
 
 @NgModule({
 	imports: [
@@ -29,15 +27,13 @@ import { SubmitService }		from './Submit/submit.service'
 		MainComponent,
 		LoginComponent,
 		TasksComponent,
-		ProblemComponent,
-		SubmitComponent
+		ProblemComponent
 	],
 	bootstrap: [ MainComponent ],
 	providers: [
 		LoginService,
 		TasksService,
 		ProblemService,
-		SubmitService,
 
 		{
 			provide: LocationStrategy,
