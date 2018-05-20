@@ -5,6 +5,9 @@ import java.sql.Time
 data class Problem (
         val id: Int,
         val name: String,
+        val path: String,
+        val timeLimit: Int,
+        val memoryLimit: Int,
         val statement: String = ""
 )
 

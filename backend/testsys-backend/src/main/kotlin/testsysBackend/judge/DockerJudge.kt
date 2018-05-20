@@ -10,8 +10,12 @@ import testsysBackend.api.ExcludeStatement
 class DockerJudge(override val args: List<String>, override val logger: KLogger): IJudge {
 
     override fun connect(): Boolean {
-        val r = get(args[0])
-        return r.statusCode == 200
+        return try {
+            val r = get(args[0])
+            r.statusCode == 200
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override fun test(params: SubmitRequest): CheckerResponse? {

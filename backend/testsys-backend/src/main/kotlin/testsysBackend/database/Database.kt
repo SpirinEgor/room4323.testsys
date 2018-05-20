@@ -35,7 +35,10 @@ class Database(private val path: String,
         }
         while (resultQuery.next()) {
             tasks.add(Problem(resultQuery.getInt("id"),
-                                resultQuery.getString("name")))
+                        resultQuery.getString("name"),
+                        resultQuery.getString("path"),
+                        resultQuery.getInt("time_limit"),
+                        resultQuery.getInt("memory_limit")))
         }
         return tasks
     }
@@ -51,7 +54,10 @@ class Database(private val path: String,
             return null
         }
         return Problem(resultQuery.getInt("id"),
-                        resultQuery.getString("name"))
+                        resultQuery.getString("name"),
+                        resultQuery.getString("path"),
+                        resultQuery.getInt("time_limit"),
+                        resultQuery.getInt("memory_limit"))
     }
 
     fun getSubmits(userId: Int, prId: Int): List<Submit> {
